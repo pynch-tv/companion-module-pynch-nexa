@@ -1,7 +1,26 @@
 module.exports = function (self) {
-	self.setVariableDefinitions([
-		{ variableId: 'variable1', name: 'My first variable' },
-		{ variableId: 'variable2', name: 'My second variable' },
-		{ variableId: 'variable3', name: 'Another variable' },
-	])
+
+	const variables = []; 
+
+	variables.push({
+		name: 'Server ID',
+		variableId: 'serverId',
+	});
+
+	variables.push({
+		name: 'Output ID',
+		variableId: 'outputId',
+	});
+
+	variables.push({
+		name: 'Input ID',
+		variableId: 'inputId',
+	});
+
+	variables.push({
+		name: 'Clip ID',
+		variableId: 'clipId',
+	});
+
+	self.setVariableDefinitions(variables)
 }

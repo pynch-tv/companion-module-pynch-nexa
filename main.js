@@ -40,10 +40,54 @@ class ModuleInstance extends InstanceBase {
 	getConfigFields() {
 		return [
 			{
-				type: 'textinput',
-				id: 'serviceUrl',
+				type: 'bonjour-device',
+				id: 'bonjourHost',
 				label: 'LandingPage URL of the Nexa service',
-				width: 16
+				width: 6,
+			},	
+			{
+				type: 'textinput',
+				id: 'host',
+				label: 'Nexa URL',
+				width: 6,
+				regex: Regex.URL,
+				isVisible: (options) => !options['bonjourHost'],
+			},
+			{
+				type: 'static-text',
+				id: 'host-filler',
+				width: 6,
+				label: '',
+				value: '',
+				isVisible: (options) => !!options['bonjourHost'],
+			},
+			{
+				type: 'dropdown',
+				id: 'serverId',
+				label: 'Server',
+				width: 6,
+				choices: [{ id: '1', label: 'aaaaa'}, { id: '2', label: 'bbbbb'}],
+			},
+			{
+				type: 'static-text',
+				id: 'server-filler',
+				width: 6,
+				label: '',
+				value: '',
+			},
+			{
+				type: 'dropdown',
+				id: 'outputId',
+				label: 'Output',
+				width: 6,
+				choices: [{ id: 'PGM1', label: 'PGM1'}, { id: 'PGM2', label: 'PGM2'}, { id: 'PGM3', label: 'PGM3'}],
+			},
+			{
+				type: 'static-text',
+				id: 'output-filler',
+				width: 6,
+				label: '',
+				value: '',
 			},
 		]
 	}
