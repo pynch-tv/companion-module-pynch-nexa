@@ -3,7 +3,7 @@
 	"name": "pynch-nexa",
 	"shortname": "nexa",
 	"description": "Module to control AV servers",
-	"version": "0.0.0",
+	"version": "1.8.0",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-pynch-nexa.git",
 	"bugs": "https://github.com/bitfocus/companion-module-pynch-nexa/issues",
@@ -22,5 +22,5 @@
 	"legacyIds": [],
 	"manufacturer": "Pynch",
 	"products": ["Nexa"],
-	"keywords": []
+	"keywords": ["audioVideo", "EVS", "LinX", "Server", "AV"]
 }

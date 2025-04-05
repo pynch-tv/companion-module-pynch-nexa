@@ -13,7 +13,5 @@ Allows you to connect and control AudioVideo servers from EVS using the LinX pro
 
 **Supported button variables**
 
-- Server ID
-- Output ID
-- Input ID
-- Clip ID
+- Status
+- Play Speed

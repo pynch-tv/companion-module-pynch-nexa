@@ -4,8 +4,11 @@ const UpdateActions = require('./actions')
 const UpdateFeedbacks = require('./feedbacks')
 const UpdateVariableDefinitions = require('./variables')
 const bonjour = require('bonjour')()
+const axios = require('axios')
+const semver = require('semver')
 
 class ModuleInstance extends InstanceBase {
+
 	constructor(internal) {
 		super(internal)
 	}
@@ -15,18 +18,21 @@ class ModuleInstance extends InstanceBase {
 
 		this.log('debug', 'init')
 
-//		bonjour.find({ type: 'http' }, function (service) {
-//					console.log('debug', 'Found an OpenGate server:'+ service) // TODO: add Collection buttons
-//					var serviceRootUrl = `${service.txt.protocol}://${service.addresses[0]}:${service.port}${service.txt.rootpath}/`
-//					//servers.push(serviceRootUrl)
-//				})
+		bonjour.find({ type: 'nexa', protocol: 'tcp' }, function (service) {
+			console.log('debug', 'Found a Nexa service:'+ service.txt.protocol) 
+			var serviceRootUrl = `${service.txt.protocol}://${service.addresses[0]}:${service.port}${service.txt.rootpath}/`
+			//servers.push(serviceRootUrl)
+		})
 
 		this.updateStatus(InstanceStatus.Ok)
 
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
+
+		this.initNexa();
 	}
+
 	// When module gets deleted
 	async destroy() {
 		this.log('debug', 'destroy')
@@ -38,6 +44,16 @@ class ModuleInstance extends InstanceBase {
 
 	// Return config fields for web config
 	getConfigFields() {
+
+		var servers = [];
+		servers.push({ id: '1', label: 'aaaaa'});
+		servers.push({ id: '2', label: 'bbbbb'});
+
+		var outputs = [];
+		outputs.push({ id: '1', label: 'PGM1'});
+		outputs.push({ id: '2', label: 'PGM2'});
+		outputs.push({ id: '3', label: 'PGM3'});
+
 		return [
 			{
 				type: 'bonjour-device',
@@ -66,7 +82,7 @@ class ModuleInstance extends InstanceBase {
 				id: 'serverId',
 				label: 'Server',
 				width: 6,
-				choices: [{ id: '1', label: 'aaaaa'}, { id: '2', label: 'bbbbb'}],
+				choices: servers,
 			},
 			{
 				type: 'static-text',
@@ -80,7 +96,7 @@ class ModuleInstance extends InstanceBase {
 				id: 'outputId',
 				label: 'Output',
 				width: 6,
-				choices: [{ id: 'PGM1', label: 'PGM1'}, { id: 'PGM2', label: 'PGM2'}, { id: 'PGM3', label: 'PGM3'}],
+				choices: outputs,
 			},
 			{
 				type: 'static-text',
@@ -102,6 +118,11 @@ class ModuleInstance extends InstanceBase {
 
 	updateVariableDefinitions() {
 		UpdateVariableDefinitions(this)
+	}
+
+	initNexa()
+	{
+		this.log('debug', 'initNexa')
 	}
 }
 

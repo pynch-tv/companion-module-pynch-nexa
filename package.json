@@ -13,7 +13,9 @@
 	},
 	"dependencies": {
 		"@companion-module/base": "~1.11.2",
-		"bonjour": "^3.5.0"
+		"axios": "^1.8.4",
+		"bonjour": "^3.3.0",
+		"semver": "^7.7.1"
 	},
 	"devDependencies": {
 		"@companion-module/tools": "^2.1.1",
