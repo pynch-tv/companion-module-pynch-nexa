@@ -3,6 +3,7 @@ const UpgradeScripts = require('./upgrades')
 const UpdateActions = require('./actions')
 const UpdateFeedbacks = require('./feedbacks')
 const UpdateVariableDefinitions = require('./variables')
+const bonjour = require('bonjour')()
 
 class ModuleInstance extends InstanceBase {
 	constructor(internal) {
@@ -11,6 +12,14 @@ class ModuleInstance extends InstanceBase {
 
 	async init(config) {
 		this.config = config
+
+		this.log('debug', 'init')
+
+//		bonjour.find({ type: 'http' }, function (service) {
+//					console.log('debug', 'Found an OpenGate server:'+ service) // TODO: add Collection buttons
+//					var serviceRootUrl = `${service.txt.protocol}://${service.addresses[0]}:${service.port}${service.txt.rootpath}/`
+//					//servers.push(serviceRootUrl)
+//				})
 
 		this.updateStatus(InstanceStatus.Ok)
 
@@ -32,17 +41,9 @@ class ModuleInstance extends InstanceBase {
 		return [
 			{
 				type: 'textinput',
-				id: 'host',
-				label: 'Target IP',
-				width: 8,
-				regex: Regex.IP,
-			},
-			{
-				type: 'textinput',
-				id: 'port',
-				label: 'Target Port',
-				width: 4,
-				regex: Regex.PORT,
+				id: 'serviceUrl',
+				label: 'LandingPage URL of the Nexa service',
+				width: 16
 			},
 		]
 	}
