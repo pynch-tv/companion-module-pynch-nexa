@@ -123,6 +123,22 @@ class ModuleInstance extends InstanceBase {
 	initNexa()
 	{
 		this.log('debug', 'initNexa')
+
+	//	this.updateStatus(InstanceStatus.Connecting)
+
+		axios.get('http://192.168.0.144:8080/v1/servers')
+			.then(function (response) {
+				// handle success
+				console.log(response.data.servers[0].id);
+			})
+			.catch(function (error) {
+				// handle error
+				console.log(error);
+			})
+			.finally(function () {
+				// always executed
+				//this.updateStatus(InstanceStatus.Ok)
+			});
 	}
 }
 

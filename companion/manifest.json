@@ -22,5 +22,14 @@
 	"legacyIds": [],
 	"manufacturer": "Pynch",
 	"products": ["Nexa"],
-	"keywords": ["audioVideo", "EVS", "LinX", "Server", "AV"]
+	"keywords": ["audioVideo", "EVS", "LinX", "Server", "AV"],
+	"bonjourQueries": {
+		"bonjourHost": {
+			"type": "pynch",
+			"protocol": "tcp",
+			"txt": {
+				"class": "Nexa"
+			}
+		}
+	}
 }
