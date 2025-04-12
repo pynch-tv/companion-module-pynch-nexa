@@ -1,17 +1,19 @@
 ## Pynch Nexa
 
-Allows you to connect and control AudioVideo servers from EVS using the LinX protocol.
+Allows you to connect and control AudioVideo servers from various vendors.
+[Nexa](https://github.com/pynch-tv/Nexa) is an abstraction to the EVS LinX, Blackmagic Design HyperDeck and Sony9Pin. Download the latest version [here](https://bzzrs.aardvark.myds.me/bzzrbx/v1.0/collections/pynch/items/1.8.9261?t=nexa).
 
 **Supported commands**
 
+- Load
 - Play
 - Stop
 
 **Supported feedback**
 
-- Transport Status
-
 **Supported button variables**
 
 - Status
+- Outputs
+- Clips
 - Play Speed

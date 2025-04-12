@@ -1,11 +1,9 @@
 const { InstanceBase, Regex, runEntrypoint, InstanceStatus } = require('@companion-module/base')
-const UpgradeScripts = require('./upgrades')
-const UpdateActions = require('./actions')
-const UpdateFeedbacks = require('./feedbacks')
-const UpdateVariableDefinitions = require('./variables')
-const bonjour = require('bonjour')()
+const UpgradeScripts = require('./src/upgrades')
+const UpdateActions = require('./src/actions')
+const UpdateFeedbacks = require('./src/feedbacks')
+const UpdateVariableDefinitions = require('./src/variables')
 const axios = require('axios')
-const semver = require('semver')
 
 class ModuleInstance extends InstanceBase {
 
@@ -14,23 +12,27 @@ class ModuleInstance extends InstanceBase {
 	}
 
 	async init(config) {
-		this.config = config
+		this.log("info", "Initializing module with config:", config);
+		this.config = config || {}
 
-		this.log('debug', 'init')
+		this.updateStatus(InstanceStatus.Connecting)
 
-		bonjour.find({ type: 'nexa', protocol: 'tcp' }, function (service) {
-			console.log('debug', 'Found a Nexa service:'+ service.txt.protocol) 
-			var serviceRootUrl = `${service.txt.protocol}://${service.addresses[0]}:${service.port}${service.txt.rootpath}/`
-			//servers.push(serviceRootUrl)
-		})
+		var self = this
 
-		this.updateStatus(InstanceStatus.Ok)
+		var host = self.config.bonjourHost || self.config.host
+		var serverId = self.config.serverId
+
+		var response = await axios.get(`http://${host}/v1/servers/${serverId}/outputs?f=json&properties=id,name`)
+		self.config.outputs = response.data.outputs
+
+		response = await axios.get(`http://${host}/v1/servers/${serverId}/clips?f=json&properties=id,name`)
+		self.config.clips = response.data.clips
 
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
 
-		this.initNexa();
+		self.updateStatus(InstanceStatus.Ok);
 	}
 
 	// When module gets deleted
@@ -39,22 +41,22 @@ class ModuleInstance extends InstanceBase {
 	}
 
 	async configUpdated(config) {
-		this.config = config
+		this.log("info", "Config updated:", config);
+		this.config = config || {};
+		this.log("info", "Config updated:", config.bonjourHost);
 	}
 
 	// Return config fields for web config
 	getConfigFields() {
 
-		var servers = [];
-		servers.push({ id: '1', label: 'aaaaa'});
-		servers.push({ id: '2', label: 'bbbbb'});
-
-		var outputs = [];
-		outputs.push({ id: '1', label: 'PGM1'});
-		outputs.push({ id: '2', label: 'PGM2'});
-		outputs.push({ id: '3', label: 'PGM3'});
-
 		return [
+			{
+				type: 'static-text',
+				id: 'aaa-filler',
+				width: 12,
+				label: 'Important:',
+				value: 'For this module to work correctly, a Nexa server must be running on the network. Download the latest version https://github.com/pynch-tv/Nexa.',
+			},
 			{
 				type: 'bonjour-device',
 				id: 'bonjourHost',
@@ -77,34 +79,43 @@ class ModuleInstance extends InstanceBase {
 				value: '',
 				isVisible: (options) => !!options['bonjourHost'],
 			},
+
 			{
-				type: 'dropdown',
+				type: 'checkbox',
+				id: 'usernamePassword',
+				label: 'Require Username Password',
+				width: 6,
+				default: false,
+			},
+			{
+				type: 'static-text',
+				id: 'require-filler',
+				width: 6,
+				label: '',
+				value: '',
+			},
+			{
+				type: 'textinput',
+				id: 'username',
+				width: 6,
+				label: 'Username',
+				value: '',
+				isVisible: (options) => options['usernamePassword'],
+			},
+			{
+				type: 'textinput',
+				id: 'password',
+				width: 6,
+				label: 'Password',
+				value: '',
+				isVisible: (options) => options['usernamePassword'],
+			},
+			{
+				type: 'textinput',
 				id: 'serverId',
+				width: 6,
 				label: 'Server',
-				width: 6,
-				choices: servers,
-			},
-			{
-				type: 'static-text',
-				id: 'server-filler',
-				width: 6,
-				label: '',
-				value: '',
-			},
-			{
-				type: 'dropdown',
-				id: 'outputId',
-				label: 'Output',
-				width: 6,
-				choices: outputs,
-			},
-			{
-				type: 'static-text',
-				id: 'output-filler',
-				width: 6,
-				label: '',
-				value: '',
-			},
+			}	
 		]
 	}
 
@@ -118,27 +129,6 @@ class ModuleInstance extends InstanceBase {
 
 	updateVariableDefinitions() {
 		UpdateVariableDefinitions(this)
-	}
-
-	initNexa()
-	{
-		this.log('debug', 'initNexa')
-
-	//	this.updateStatus(InstanceStatus.Connecting)
-
-		axios.get('http://192.168.0.144:8080/v1/servers')
-			.then(function (response) {
-				// handle success
-				console.log(response.data.servers[0].id);
-			})
-			.catch(function (error) {
-				// handle error
-				console.log(error);
-			})
-			.finally(function () {
-				// always executed
-				//this.updateStatus(InstanceStatus.Ok)
-			});
 	}
 }
 

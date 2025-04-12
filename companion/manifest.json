@@ -21,7 +21,7 @@
 	},
 	"legacyIds": [],
 	"manufacturer": "Pynch",
-	"products": ["Nexa"],
+	"products": ["Nexa", "EVS", "LinX", "XT", "XS", "LSM", "Sony9Pin"],
 	"keywords": ["audioVideo", "EVS", "LinX", "Server", "AV"],
 	"bonjourQueries": {
 		"bonjourHost": {
