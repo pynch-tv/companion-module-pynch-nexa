@@ -6,9 +6,9 @@ This module interacts with a [Pynch Nexa](https://github.com/pynch-tv/Nexa) REST
 
 Each connection manages a single audioVideoServer. When you have multiple devices that you want to control, make a new connection for each.
 
-![Screenshot 2025-04-13 at 10 00 51](https://github.com/user-attachments/assets/2de30aef-c0b2-408f-b0d1-a9aca2f34ca7)
+![Screenshot 2025-04-13 at 15 54 34](https://github.com/user-attachments/assets/421d9818-a271-48f9-ab7f-244185565185)
 
-The module will automatically find the Nexa service through Bonjour. A manual option is also available. Use the same format as used in Bonjour: `<IPv4>:<Port>`
+The module will automatically find the Nexa IP through Bonjour. Use this as a hint to build the serviceUrl. The Nexa console displayed the full ServiceUrl.
 
 The server name needs to be entered manually (unfortunately a dropbox can't be filled with available servers for the moment). To find the available server, check your Nexa service Landing Page.
 
