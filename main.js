@@ -1,8 +1,8 @@
 const { InstanceBase, Regex, runEntrypoint, InstanceStatus } = require('@companion-module/base')
-const UpgradeScripts = require('./src/upgrades')
-const UpdateActions = require('./src/actions')
-const UpdateFeedbacks = require('./src/feedbacks')
-const UpdateVariableDefinitions = require('./src/variables')
+const UpgradeScripts = require('./upgrades')
+const UpdateActions = require('./actions')
+const UpdateFeedbacks = require('./feedbacks')
+const UpdateVariableDefinitions = require('./variables')
 const axios = require('axios')
 
 class ModuleInstance extends InstanceBase {
