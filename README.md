@@ -1,8 +1,6 @@
 # companion-module-pynch-nexa
 
-See [HELP.md](./companion/HELP.md) and [LICENSE](./LICENSE)
-
-This module interacts with a Pynch Nexa REST API service, that in its turn talks to either a [EVS XT](https://evs.com/products/live-production-servers/xt-via)'s or [HyperDeck](https://www.blackmagicdesign.com/products/hyperdeckstudio/models)'s.
+This module interacts with a [Pynch Nexa](https://github.com/pynch-tv/Nexa) REST API service, that in its turn talks to either a [EVS XT](https://evs.com/products/live-production-servers/xt-via)'s or [HyperDeck](https://www.blackmagicdesign.com/products/hyperdeckstudio/models)'s.
 
 ## Connection
 
@@ -27,6 +25,3 @@ Load a clip from the dropdown and loads it on the chosen output (PGM1).
 ![Screenshot 2025-04-13 at 09 47 18](https://github.com/user-attachments/assets/71a7ee48-7550-424e-baef-5c94d6685b6f)
 
 Changes the the status of the chosen output (PGM1) : options are `Play`, `Stop` or `Pause`. 
-
-## Pynch Nexa
-A unified REST API on top of specfic vendor's protocols. Each protocol is implemented in a Nexa PlugIn that is loaded at runtime
