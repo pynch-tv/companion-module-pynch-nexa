@@ -12,27 +12,43 @@ class ModuleInstance extends InstanceBase {
 	}
 
 	async init(config) {
-		this.log("info", "Initializing module with config:", config);
-		this.config = config || {}
+		this.config = config
+
+/*		for (var key in this.config) {
+			if (this.config.hasOwnProperty(key)) {
+				console.log("debug", `action key: ${key} ` )
+			}
+		}
+*/
 
 		this.updateStatus(InstanceStatus.Connecting)
 
-		var self = this
+		var serviceUrl = this.config.serviceUrl
+		var serverId = this.config.serverId;
 
-		var host = self.config.bonjourHost || self.config.host
-		var serverId = self.config.serverId
+		this.log("info", `init serviceUrl: ${serviceUrl} serverId: ${serverId}`)
 
-		var response = await axios.get(`http://${host}/v1/servers/${serverId}/outputs?f=json&properties=id,name`)
-		self.config.outputs = response.data.outputs
+		try {
+			var response = await axios.get(`${serviceUrl}/servers/${serverId}/outputs?f=json&properties=id,name`)
+			this.config.outputs = response.data.outputs
 
-		response = await axios.get(`http://${host}/v1/servers/${serverId}/clips?f=json&properties=id,name`)
-		self.config.clips = response.data.clips
+			this.log("info", `Outputs count: ${response.data.outputs.length}`)
+
+			response = await axios.get(`${serviceUrl}/servers/${serverId}/clips?f=json&properties=id,name`)
+			this.config.clips = response.data.clips
+
+			this.log("info", `Clips count: ${response.data.clips.length}`)
+		}
+		catch (err)
+		{
+			this.log("error", `${err}`);
+		}
 
 		this.updateActions() // export actions
 		this.updateFeedbacks() // export feedbacks
 		this.updateVariableDefinitions() // export variable definitions
 
-		self.updateStatus(InstanceStatus.Ok);
+		this.updateStatus(InstanceStatus.Ok);
 	}
 
 	// When module gets deleted
@@ -41,9 +57,7 @@ class ModuleInstance extends InstanceBase {
 	}
 
 	async configUpdated(config) {
-		this.log("info", "Config updated:", config);
-		this.config = config || {};
-		this.log("info", "Config updated:", config.bonjourHost);
+		this.config = config;
 	}
 
 	// Return config fields for web config
@@ -60,7 +74,7 @@ class ModuleInstance extends InstanceBase {
 			{
 				type: 'bonjour-device',
 				id: 'bonjourHost',
-				label: 'LandingPage URL of the Nexa service',
+				label: 'IP and Port of the Nexa service',
 				width: 6,
 			},	
 			{
@@ -79,7 +93,30 @@ class ModuleInstance extends InstanceBase {
 				value: '',
 				isVisible: (options) => !!options['bonjourHost'],
 			},
-
+			{
+				type: 'textinput',
+				id: 'serviceUrl',
+				width: 6,
+				label: 'ServiceUrl path',
+			},
+			{
+				type: 'static-text',
+				id: 'filler3',
+				width: 6,
+				label: '',
+			},
+			{
+				type: 'textinput',
+				id: 'serverId',
+				width: 6,
+				label: 'Server',
+			},
+			{
+				type: 'static-text',
+				id: 'filler4',
+				width: 6,
+				label: '',
+			},
 			{
 				type: 'checkbox',
 				id: 'usernamePassword',
@@ -110,12 +147,6 @@ class ModuleInstance extends InstanceBase {
 				value: '',
 				isVisible: (options) => options['usernamePassword'],
 			},
-			{
-				type: 'textinput',
-				id: 'serverId',
-				width: 6,
-				label: 'Server',
-			}	
 		]
 	}
 

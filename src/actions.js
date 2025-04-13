@@ -4,16 +4,22 @@ module.exports = function (self) {
 
 	const actions = [];
 
+	for (var key in self.config.outputs) {
+		if (self.config.outputs.hasOwnProperty(key)) {
+			console.log("info", `action key: ${key} ` )
+		}
+	}
+
 	var outputChoices = []
-	self.config.outputs.forEach(output => {
+/*	self.config.outputs.forEach(output => {
 		outputChoices.push({ id: output.id, label: output.id})
 	});
-
+*/
 	var clipChoices = []
-	self.config.clips.forEach(clip => {
+/*	self.config.clips.forEach(clip => {
 		clipChoices.push({ id: clip.id, label: clip.id})
 	});
-
+*/
 	var statusChoices = []
 	statusChoices.push({ id: "play", label: "Play"})
 	statusChoices.push({ id: "stop", label: "Stop"})
@@ -41,14 +47,19 @@ module.exports = function (self) {
 				choices: statusChoices,
 			}
 		],
-		callback: async ({ options }) => {
+		callback: async (event) => {
 
 			var host = self.config.bonjourHost || self.config.host
 
 			// options.speed
-
-			body = { "status" : options.status, "speed": options.speed }
-			var response = await axios.patch(`http://${host}/v1/servers/${self.config.serverId}/outputs/${options.outputId}`, body)
+			try {
+				body = { "status" : event.options.status, "speed": event.options.speed }
+				var response = await axios.patch(`http://${host}/v1/servers/${self.config.serverId}/outputs/${options.outputId}`, body)
+			}
+			catch (err)
+			{
+				console.log(err)
+			}
 		},
 	}
 
@@ -74,8 +85,14 @@ module.exports = function (self) {
 
 			// options.speed
 
-			body = { "clip" : { "id": options.clipId } }
-			var response = await axios.patch(`http://${host}/v1/servers/${self.config.serverId}/outputs/${options.outputId}`, body)
+			try {
+				body = { "clip" : { "id": options.clipId } }
+				var response = await axios.patch(`http://${host}/v1/servers/${self.config.serverId}/outputs/${options.outputId}`, body)
+			}
+			catch (err)
+			{
+				console.log(err)
+			}
 		},
 	}
 
