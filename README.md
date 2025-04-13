@@ -18,12 +18,12 @@ The server name needs to be entered manually (unfortunately a dropbox can't be f
 
 ### Load
 
-![Screenshot 2025-04-13 at 09 35 55](https://github.com/user-attachments/assets/55d5fcf2-680f-4f45-a88c-ac21f74b2ba1)
+![Screenshot 2025-04-13 at 10 04 10](https://github.com/user-attachments/assets/abb2c361-8d06-4d28-b563-49a5c3b4cb02)
 
-Load a clip from the dropdown and loads it on the chosen output (PGM1).
+Load a `clip` from the dropdown and loads it on the chosen `output` (PGM1).
 
 ### Status
 
-![Screenshot 2025-04-13 at 09 47 18](https://github.com/user-attachments/assets/71a7ee48-7550-424e-baef-5c94d6685b6f)
+![Screenshot 2025-04-13 at 10 04 17](https://github.com/user-attachments/assets/0c25abd2-502c-468b-8333-bece366d51d9)
 
-Changes the the status of the chosen output (PGM1) : options are `Play`, `Stop` or `Pause`. 
+Changes the the `status` of the chosen output (PGM1) : options are `Play`, `Stop` or `Pause`. 
