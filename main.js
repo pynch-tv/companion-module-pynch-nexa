@@ -14,12 +14,12 @@ class ModuleInstance extends InstanceBase {
 	async init(config) {
 		this.config = config;
 
-/*		for (var key in this.config) {
+		for (var key in this.config) {
 			if (this.config.hasOwnProperty(key)) {
-				console.log("debug", `action key: ${key} ` )
+				this.log("debug", `init Key: ${key} Value: ${this.config[key]}` )
 			}
 		}
-*/ 
+
 		this.updateStatus(InstanceStatus.Connecting)
 
 		var serviceUrl = this.config.serviceUrl
@@ -42,7 +42,9 @@ class ModuleInstance extends InstanceBase {
 		}
 		catch (err)
 		{
-			this.log("error", `${err}`);
+			this.log("error", `${err}`)
+
+			this.updateStatus(InstanceStatus.BadConfig);
 		}
 
 		this.updateActions() // export actions

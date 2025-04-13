@@ -4,24 +4,29 @@ module.exports = function (self) {
 
 	const actions = [];
 
-	self.log("info", self.config.serverId )
-	self.log("info", self.config.outputs.length )
+	self.log("debug", `action def` )
 
 	for (var key in self.config) {
 		if (self.config.hasOwnProperty(key)) {
-			self.log("info", `action key: ${key} ` )
+			self.log("debug", `action Key: ${key} Value: ${self.config[key]}` )
 		}
 	}
 
 	var outputChoices = []
-	self.config.outputs.forEach(output => {
-		outputChoices.push({ id: output.id, label: output.id})
-	});
+	if (Array.isArray(self.config.outputs))
+		self.config.outputs.forEach(output => {
+			outputChoices.push({ id: output.id, label: output.id})
+		});
+	else
+		self.log("error", `self.config.outputs is not an array` );
 
 	var clipChoices = []
-	self.config.clips.forEach(clip => {
-		clipChoices.push({ id: clip.id, label: clip.id})
-	});
+	if (Array.isArray(self.config.clips))
+		self.config.clips.forEach(clip => {
+			clipChoices.push({ id: clip.id, label: clip.id})
+		});
+	else
+		self.log("error", `self.config.clips is not an array` )
 
 	var statusChoices = []
 	statusChoices.push({ id: "play", label: "Play"})
@@ -52,7 +57,7 @@ module.exports = function (self) {
 			var outputId = event.options.outputId
 			var clipId = event.options.clipId
 
-			self.log("info", `Action Load: ${serviceUrl}/servers/${serverId}/outputs/${outputId}` )
+			self.log("info", `Action Load: ${serviceUrl}/servers/${serverId}/outputs/${outputId}` );
 			self.log("info", `Action Load: clipId ${clipId}` )
 
 			try {
