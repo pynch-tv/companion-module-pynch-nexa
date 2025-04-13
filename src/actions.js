@@ -4,28 +4,69 @@ module.exports = function (self) {
 
 	const actions = [];
 
-	for (var key in self.config.outputs) {
-		if (self.config.outputs.hasOwnProperty(key)) {
-			console.log("info", `action key: ${key} ` )
+	self.log("info", self.config.serverId )
+	self.log("info", self.config.outputs.length )
+
+	for (var key in self.config) {
+		if (self.config.hasOwnProperty(key)) {
+			self.log("info", `action key: ${key} ` )
 		}
 	}
 
 	var outputChoices = []
-/*	self.config.outputs.forEach(output => {
+	self.config.outputs.forEach(output => {
 		outputChoices.push({ id: output.id, label: output.id})
 	});
-*/
+
 	var clipChoices = []
-/*	self.config.clips.forEach(clip => {
+	self.config.clips.forEach(clip => {
 		clipChoices.push({ id: clip.id, label: clip.id})
 	});
-*/
+
 	var statusChoices = []
 	statusChoices.push({ id: "play", label: "Play"})
 	statusChoices.push({ id: "stop", label: "Stop"})
 	statusChoices.push({ id: "pause", label: "Pause"})
 
-	actions['output'] = {
+	actions['load'] = {
+		name: 'Load',
+		options: [
+			{
+				type: 'dropdown',
+				label: 'Output',
+				id: 'outputId',
+				choices: outputChoices,
+			},
+			{
+				type: 'dropdown',
+				label: 'Clip',
+				id: 'clipId',
+				choices: clipChoices,
+			},
+		],
+		callback: async (event) => {
+
+			var serviceUrl = self.config.serviceUrl
+			var serverId = self.config.serverId
+
+			var outputId = event.options.outputId
+			var clipId = event.options.clipId
+
+			self.log("info", `Action Load: ${serviceUrl}/servers/${serverId}/outputs/${outputId}` )
+			self.log("info", `Action Load: clipId ${clipId}` )
+
+			try {
+				body = { "clip" : { "id": clipId } }
+				var response = await axios.patch(`${serviceUrl}/servers/${serverId}/outputs/${outputId}`, body)
+			}
+			catch (err)
+			{
+				console.log(err)
+			}
+		},
+	}
+
+	actions['status'] = {
 		name: 'Status',
 		options: [
 			{
@@ -49,50 +90,25 @@ module.exports = function (self) {
 		],
 		callback: async (event) => {
 
-			var host = self.config.bonjourHost || self.config.host
+			var serviceUrl = self.config.serviceUrl
+			var serverId = self.config.serverId
 
-			// options.speed
+			var outputId = event.options.outputId
+			var status = event.options.status
+			var speed = event.options.speed
+
+			self.log("info", `Action Status: ${serviceUrl}/servers/${serverId}/outputs/${outputId}` )
+			self.log("info", `Action Status: Status ${status} Speed: ${speed}` )
+
 			try {
-				body = { "status" : event.options.status, "speed": event.options.speed }
-				var response = await axios.patch(`http://${host}/v1/servers/${self.config.serverId}/outputs/${options.outputId}`, body)
+				body = { "status" : status, "speed": speed }
+				var response = await axios.patch(`${serviceUrl}/servers/${serverId}/outputs/${outputId}`, body)
 			}
 			catch (err)
 			{
 				console.log(err)
 			}
-		},
-	}
 
-	actions['load'] = {
-		name: 'Load',
-		options: [
-			{
-				type: 'dropdown',
-				label: 'Output',
-				id: 'outputId',
-				choices: outputChoices,
-			},
-			{
-				type: 'dropdown',
-				label: 'Clip',
-				id: 'clipId',
-				choices: clipChoices,
-			},
-		],
-		callback: async ({ options }) => {
-
-			var host = self.config.bonjourHost || self.config.host
-
-			// options.speed
-
-			try {
-				body = { "clip" : { "id": options.clipId } }
-				var response = await axios.patch(`http://${host}/v1/servers/${self.config.serverId}/outputs/${options.outputId}`, body)
-			}
-			catch (err)
-			{
-				console.log(err)
-			}
 		},
 	}
 

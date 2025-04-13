@@ -12,15 +12,14 @@ class ModuleInstance extends InstanceBase {
 	}
 
 	async init(config) {
-		this.config = config
+		this.config = config;
 
 /*		for (var key in this.config) {
 			if (this.config.hasOwnProperty(key)) {
 				console.log("debug", `action key: ${key} ` )
 			}
 		}
-*/
-
+*/ 
 		this.updateStatus(InstanceStatus.Connecting)
 
 		var serviceUrl = this.config.serviceUrl
@@ -29,7 +28,9 @@ class ModuleInstance extends InstanceBase {
 		this.log("info", `init serviceUrl: ${serviceUrl} serverId: ${serverId}`)
 
 		try {
-			var response = await axios.get(`${serviceUrl}/servers/${serverId}/outputs?f=json&properties=id,name`)
+			var response = await axios.get(`${serviceUrl}`)
+
+			response = await axios.get(`${serviceUrl}/servers/${serverId}/outputs?f=json&properties=id,name`)
 			this.config.outputs = response.data.outputs
 
 			this.log("info", `Outputs count: ${response.data.outputs.length}`)
