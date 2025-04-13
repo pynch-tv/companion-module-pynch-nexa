@@ -55,7 +55,7 @@ class ModuleInstance extends InstanceBase {
 				id: 'aaa-filler',
 				width: 12,
 				label: 'Important:',
-				value: 'For this module to work correctly, a Nexa server must be running on the network. Download the latest version https://github.com/pynch-tv/Nexa.',
+				value: 'For this module to work correctly, a Nexa server must be running on the network. Download the latest version from https://pynch-tv/nexa',
 			},
 			{
 				type: 'bonjour-device',

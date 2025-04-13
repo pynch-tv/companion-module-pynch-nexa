@@ -18,7 +18,6 @@ module.exports = function (self) {
 	statusChoices.push({ id: "play", label: "Play"})
 	statusChoices.push({ id: "stop", label: "Stop"})
 	statusChoices.push({ id: "pause", label: "Pause"})
-	statusChoices.push({ id: "rewind", label: "Rewind"})
 
 	actions['output'] = {
 		name: 'Status',
@@ -29,13 +28,7 @@ module.exports = function (self) {
 				id: 'outputId',
 				choices: outputChoices,
 			},
-/*			{
-				type: 'dropdown',
-				label: 'Clip',
-				id: 'clipId',
-				choices: clipChoices,
-			},
-*/			{
+			{
 				type: 'number',
 				label: 'Speed %',
 				id: 'speed',
