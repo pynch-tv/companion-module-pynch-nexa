@@ -8,12 +8,12 @@ Allows you to connect and control AudioVideo servers from various vendors.
 - Load
 - Play
 - Stop
+- Pause
 
 **Supported feedback**
 
+- n/a
+
 **Supported button variables**
 
-- Status
-- Outputs
-- Clips
-- Play Speed
+- n/a

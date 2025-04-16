@@ -6,7 +6,7 @@
 	"version": "0.1.9",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-pynch-nexa.git",
-	"bugs": "https://github.com/pynch-tv/companion-module-pynch-nexa/issues",
+	"bugs": "https://github.com/bitfocus/companion-module-pynch-nexa/issues",
 	"maintainers": [
 		{
 			"name": "Lathoub",
@@ -22,14 +22,5 @@
 	"legacyIds": [],
 	"manufacturer": "Pynch",
 	"products": ["Nexa", "EVS", "XT", "XS", "LSM", "Sony9Pin", "Hyperdeck"],
-	"keywords": ["audioVideo", "EVS", "Server", "AV", "Hyperdeck"],
-	"bonjourQueries": {
-		"bonjourHost": {
-			"type": "pynch",
-			"protocol": "tcp",
-			"txt": {
-				"class": "Nexa"
-			}
-		}
-	}
+	"keywords": ["audioVideo", "EVS", "Server", "AV", "Hyperdeck"]
 }
