@@ -3,7 +3,7 @@
 	"name": "pynch-nexa",
 	"shortname": "nexa",
 	"description": "Module to control AV servers",
-	"version": "0.1.8",
+	"version": "0.1.9",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-pynch-nexa.git",
 	"bugs": "https://github.com/pynch-tv/companion-module-pynch-nexa/issues",
