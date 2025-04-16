@@ -12,90 +12,109 @@ class ModuleInstance extends InstanceBase {
 	}
 
 	async init(config) {
-		this.config = config;
+		this.config = config
+//		this.applyConfig(config)
+/*
+		for (var key in this.config) {
+			if (this.config.hasOwnProperty(key)) {
+				this.log("debug", `init Key: ${key} Value: ${this.config[key]}` )
+			}
+		}
+*/
+//		this.updateActions() // export actions
+//		this.updateFeedbacks() // export feedbacks
+//		this.updateVariableDefinitions() // export variable definitions
 
+		await this.configUpdated(config)
+
+//		this.updateStatus(InstanceStatus.Ok);
+	}
+
+	// When module gets deleted
+	async destroy() {
+		this.updateStatus(InstanceStatus.Disconnected, 'Disabled')
+		this.log('debug', 'Destroyed')
+	}
+
+	async configUpdated(config) {
+		this.config = config;
+		await this.init_nexa()
+	}
+
+	async init_nexa()
+	{
 		for (var key in this.config) {
 			if (this.config.hasOwnProperty(key)) {
 				this.log("debug", `init Key: ${key} Value: ${this.config[key]}` )
 			}
 		}
 
-		this.updateStatus(InstanceStatus.Connecting)
-
-		var serviceUrl = this.config.serviceUrl
-		var serverId = this.config.serverId;
-
-		this.log("info", `init serviceUrl: ${serviceUrl} serverId: ${serverId}`)
-
-		try {
-			var response = await axios.get(`${serviceUrl}`)
-
-			response = await axios.get(`${serviceUrl}/servers/${serverId}/outputs?f=json&properties=id,name`)
-			this.config.outputs = response.data.outputs
-
-			this.log("info", `Outputs count: ${response.data.outputs.length}`)
-
-			response = await axios.get(`${serviceUrl}/servers/${serverId}/clips?f=json&properties=id,name`)
-			this.config.clips = response.data.clips
-
-			this.log("info", `Clips count: ${response.data.clips.length}`)
-		}
-		catch (err)
+		if (this.config.serviceUrl && this.config.serverId)
 		{
-			this.log("error", `${err}`)
+			this.updateStatus(InstanceStatus.Connecting)
 
-			this.updateStatus(InstanceStatus.BadConfig);
+			let serviceUrl = this.config.serviceUrl
+			let serverId = this.config.serverId
+
+			try {
+				var response = await axios.get(`${serviceUrl}/events`)
+				{
+					var eventUri = this.getUriFromEvents(response.data.events, "ws");
+					this.log("debug", `uri to event ${eventUri}`);
+	
+					var tt = new WebSocket(eventUri);
+					this.log("debug", `webSocket ${tt}`);
+	
+					tt.onopen = () => {}
+				}
+	
+				var response = await axios.get(`${serviceUrl}/servers/${serverId}`)
+				{
+					var clipsUri   = this.getUriFromLinkHeader(response, "clips")
+					var outputsUri = this.getUriFromLinkHeader(response, "outputs")
+	
+					if (!clipsUri || !outputsUri) throw new Error("uri to clips or outputs not found in link response header")
+	
+					this.log("debug", `uri to clips ${clipsUri}`);
+					this.log("debug", `uri to outputs ${outputsUri}`);
+				}
+	
+				response = await axios.get(`${outputsUri}?f=json&properties=id,name`)
+				{
+					this.config.outputs = response.data.outputs
+	
+					for (const link of this.config.outputs)
+						this.log("info", `${serverId} Outputs ${link.id}`)
+				}
+	
+				response = await axios.get(`${clipsUri}?f=json&properties=id,name`)
+				{
+					this.config.clips = response.data.clips
+	
+					for (const link of this.config.clips)
+						this.log("info", `${serverId} Clips ${link.id}`)
+				}
+
+				this.updateActions() // export actions
+
+				this.updateStatus(InstanceStatus.Ok)
+			}
+			catch (err)
+			{
+				this.log("error", `${err}`)
+	
+				this.updateStatus(InstanceStatus.BadConfig)
+			}
+	
 		}
-
-		this.updateActions() // export actions
-		this.updateFeedbacks() // export feedbacks
-		this.updateVariableDefinitions() // export variable definitions
-
-		this.updateStatus(InstanceStatus.Ok);
-	}
-
-	// When module gets deleted
-	async destroy() {
-		this.log('debug', 'destroy')
-	}
-
-	async configUpdated(config) {
-		this.config = config;
+		else
+			this.updateStatus(InstanceStatus.BadConfig)
 	}
 
 	// Return config fields for web config
 	getConfigFields() {
 
 		return [
-			{
-				type: 'static-text',
-				id: 'aaa-filler',
-				width: 12,
-				label: 'Important:',
-				value: 'For this module to work correctly, a Nexa server must be running on the network. Download the latest version from https://pynch-tv/nexa',
-			},
-			{
-				type: 'bonjour-device',
-				id: 'bonjourHost',
-				label: 'IP and Port of the Nexa service',
-				width: 6,
-			},	
-			{
-				type: 'textinput',
-				id: 'host',
-				label: 'Nexa URL',
-				width: 6,
-				regex: Regex.URL,
-				isVisible: (options) => !options['bonjourHost'],
-			},
-			{
-				type: 'static-text',
-				id: 'host-filler',
-				width: 6,
-				label: '',
-				value: '',
-				isVisible: (options) => !!options['bonjourHost'],
-			},
 			{
 				type: 'textinput',
 				id: 'serviceUrl',
@@ -109,21 +128,9 @@ class ModuleInstance extends InstanceBase {
 				label: '',
 			},
 			{
-				type: 'textinput',
-				id: 'serverId',
-				width: 6,
-				label: 'Server',
-			},
-			{
-				type: 'static-text',
-				id: 'filler4',
-				width: 6,
-				label: '',
-			},
-			{
 				type: 'checkbox',
 				id: 'usernamePassword',
-				label: 'Require Username Password',
+				label: 'Nexa requires credentials',
 				width: 6,
 				default: false,
 			},
@@ -150,6 +157,13 @@ class ModuleInstance extends InstanceBase {
 				value: '',
 				isVisible: (options) => options['usernamePassword'],
 			},
+			{
+				type: 'textinput',
+				id: 'serverId',
+				width: 6,
+				label: 'AudioVideo Server identifier',
+			},
+
 		]
 	}
 
@@ -163,6 +177,28 @@ class ModuleInstance extends InstanceBase {
 
 	updateVariableDefinitions() {
 		UpdateVariableDefinitions(this)
+	}
+
+	getUriFromEvents(events, rel)
+	{
+		for (const event of events) 
+			if (event.rel === rel) 
+				return event.href
+		return ""
+	}
+
+	getUriFromLinkHeader(response, relation) {
+		var links = response.headers.link.split(",").map(function (value) { return value.trim();})
+		for (const link of links) {
+			var elements = link.split(";").map(function (value) { return value.trim(); })
+			var index = elements.indexOf(`rel="${relation}"`)
+			if (index >= 0) {
+				index = elements.findIndex((element) => element.startsWith('<'))
+				if (index >= 0)
+					return elements[index].slice(1,-1)
+			}
+		};
+		return "";
 	}
 }
 

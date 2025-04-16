@@ -1,7 +1,9 @@
 module.exports = function (self) {
 
-	const variables = []; 
+	self.log("debug", `---------------- variables def ` )
 
+	const variables = []; 
+/*
 	variables.push({
 		name: 'Status',
 		variableId: 'statusId',
@@ -11,6 +13,6 @@ module.exports = function (self) {
 		name: 'Play Speed',
 		variableId: 'speed',
 	});
-
+*/
 	self.setVariableDefinitions(variables)
 }

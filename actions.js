@@ -3,15 +3,13 @@ const axios = require('axios')
 module.exports = function (self) {
 
 	const actions = [];
-
-	self.log("debug", `action def` )
-
+/*
 	for (var key in self.config) {
 		if (self.config.hasOwnProperty(key)) {
 			self.log("debug", `action Key: ${key} Value: ${self.config[key]}` )
 		}
 	}
-
+*/
 	var outputChoices = []
 	if (Array.isArray(self.config.outputs))
 		self.config.outputs.forEach(output => {
@@ -31,7 +29,7 @@ module.exports = function (self) {
 	var statusChoices = []
 	statusChoices.push({ id: "play", label: "Play"})
 	statusChoices.push({ id: "stop", label: "Stop"})
-	statusChoices.push({ id: "pause", label: "Pause"})
+	statusChoices.push({ id: "pause", label: "Pause"});
 
 	actions['load'] = {
 		name: 'Load',
@@ -94,7 +92,6 @@ module.exports = function (self) {
 			}
 		],
 		callback: async (event) => {
-
 			var serviceUrl = self.config.serviceUrl
 			var serverId = self.config.serverId
 
@@ -113,7 +110,6 @@ module.exports = function (self) {
 			{
 				console.log(err)
 			}
-
 		},
 	}
 
