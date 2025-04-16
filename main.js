@@ -13,21 +13,8 @@ class ModuleInstance extends InstanceBase {
 
 	async init(config) {
 		this.config = config
-//		this.applyConfig(config)
-/*
-		for (var key in this.config) {
-			if (this.config.hasOwnProperty(key)) {
-				this.log("debug", `init Key: ${key} Value: ${this.config[key]}` )
-			}
-		}
-*/
-//		this.updateActions() // export actions
-//		this.updateFeedbacks() // export feedbacks
-//		this.updateVariableDefinitions() // export variable definitions
 
 		await this.configUpdated(config)
-
-//		this.updateStatus(InstanceStatus.Ok);
 	}
 
 	// When module gets deleted
@@ -43,11 +30,11 @@ class ModuleInstance extends InstanceBase {
 
 	async init_nexa()
 	{
-		for (var key in this.config) {
-			if (this.config.hasOwnProperty(key)) {
-				this.log("debug", `init Key: ${key} Value: ${this.config[key]}` )
-			}
-		}
+//		for (var key in this.config) {
+//			if (this.config.hasOwnProperty(key)) {
+//				this.log("debug", `init Key: ${key} Value: ${this.config[key]}` )
+//			}
+//		}
 
 		if (this.config.serviceUrl && this.config.serverId)
 		{
@@ -103,7 +90,7 @@ class ModuleInstance extends InstanceBase {
 			{
 				this.log("error", `${err}`)
 	
-				this.updateStatus(InstanceStatus.BadConfig)
+				this.updateStatus(InstanceStatus.ConnectionFailure)
 			}
 	
 		}
