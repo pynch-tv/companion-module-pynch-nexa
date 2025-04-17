@@ -14,6 +14,8 @@ class ModuleInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
+		this.updateVariableDefinitions()
+
 		await this.configUpdated(config)
 	}
 
@@ -44,16 +46,22 @@ class ModuleInstance extends InstanceBase {
 			let serverId = this.config.serverId
 
 			try {
-				var response = await axios.get(`${serviceUrl}/events`)
+				var response = await axios.get(`${serviceUrl}`)
 				{
-					var eventUri = this.getUriFromEvents(response.data.events, "ws");
-					this.log("debug", `uri to event ${eventUri}`);
+					var eventUri = this.getUriFromLinkHeader(response, "events")
+					this.log("debug", `uri to events ${eventUri}`);
+				}
+
+				var response = await axios.get(eventUri)
+				{
+					var wsEventUri = this.getUriFromEvents(response.data.events, "ws");
+					this.log("debug", `uri to event ${wsEventUri}`);
 	
-					var tt = new WebSocket(eventUri);
+					var tt = new WebSocket(wsEventUri);
 					this.log("debug", `webSocket ${tt}`);
 	
 					tt.onopen = () => {}
-				}
+				} 
 	
 				var response = await axios.get(`${serviceUrl}/servers/${serverId}`)
 				{
@@ -64,6 +72,25 @@ class ModuleInstance extends InstanceBase {
 	
 					this.log("debug", `uri to clips ${clipsUri}`);
 					this.log("debug", `uri to outputs ${outputsUri}`);
+
+					this.setVariableValues({
+						'id': response.data.id,
+						'name': response.data.name,
+						'title': response.data.title,
+						'description': response.data.description,
+						'manufacturer': response.data.manufacturer,
+						'model': response.data.model,
+						'softwareVersion': response.data.softwareVersion,
+						'hardwareVersion': response.data.hardwareVersion,
+						'serial': response.data.serial,
+						'host': response.data.host,
+						'protocol': response.data.protocol,
+						'uptime': response.data.uptime,
+						'clipCount': response.data.clipCount,
+						'playlistCount': response.data.playlistCount,
+						'outputCount': response.data.outputCount,
+						'inputCount': response.data.inputCount,
+					})
 				}
 	
 				response = await axios.get(`${outputsUri}?f=json&properties=id,name`)
