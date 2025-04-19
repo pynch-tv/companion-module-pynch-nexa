@@ -156,7 +156,7 @@ class ModuleInstance extends InstanceBase {
 							this.log("info", `${serverId} Playlists ${link.id}`)
 				}
 
-				this.initActions()
+				this.setActionDefinitions(this.initActions(this))
 				this.initFeedbacks()
 				this.initVariables()
 				this.initPresets()

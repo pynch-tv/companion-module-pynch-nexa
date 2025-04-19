@@ -4,8 +4,7 @@ const choices = require('./choices')
 
 module.exports = {
 	  
-	initActions: function () {
-		let self = this;
+	initActions: function (self) {
 	
 		const maxShuttle = 5000
 
@@ -322,6 +321,6 @@ module.exports = {
 			}
 		}
 
-		self.setActionDefinitions(actions)
+		return actions
 	}
 }
