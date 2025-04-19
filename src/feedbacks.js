@@ -1,38 +1,49 @@
 const { combineRgb } = require('@companion-module/base')
+const choices = require('./choices.js')
 
 module.exports = {
 
-	initFeedbacks: async function () {
-		let self = this
+	initFeedbacks: function (self) {
 
-		self.setFeedbackDefinitions({
-			ChannelState: {
-				name: 'Example Feedback',
-				type: 'boolean',
-				label: 'Channel State',
-				defaultStyle: {
-					bgcolor: combineRgb(255, 0, 0),
-					color: combineRgb(0, 0, 0),
-				},
-				options: [
-					{
-						id: 'num',
-						type: 'number',
-						label: 'Test',
-						default: 5,
-						min: 0,
-						max: 10,
-					},
-				],
-				callback: (feedback) => {
-					console.log('Hello world!', feedback.options.num)
-					if (feedback.options.num > 5) {
-						return true
-					} else {
-						return false
-					}
-				},
+		var outputChoices = []
+		self.outputs.forEach(output => {
+			outputChoices.push({ id: output.id, label: output.id})
+		});
+
+		const feedbacks = [];
+
+		feedbacks['outputState'] =
+		{
+			name: 'Output status',
+			type: 'boolean',
+			description: 'Set feedback based on output status',
+			defaultStyle: {
+				bgcolor: combineRgb(255, 0, 0),
+				color: combineRgb(0, 0, 0),
 			},
-		})
+			options: [
+				{
+					type: 'dropdown',
+					label: 'Output',
+					id: 'outputId',
+					choices: outputChoices,
+					default: outputChoices[0].id,
+				},
+				{
+					type: 'dropdown',
+					label: 'Status',
+					id: 'status',
+					choices: choices.outputStatusChoices,
+					default: choices.outputStatusChoices[0].id,
+				},
+			],
+			callback: ({options}) => {
+				const output = self.outputs.find(output => output.id === options.outputId)
+		//		self.log("debug", `---=====---- ${options.status} ${output.status}` )
+				return options.status === output.status
+			},
+		}
+
+		return feedbacks
 	}
 }

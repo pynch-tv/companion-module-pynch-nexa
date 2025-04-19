@@ -13,7 +13,7 @@ async function initEvents (subscribeUri)
         
     ws.onmessage = function(event) 
     {
-//        self.log("debug", `[message] ${event.data}`)
+        self.log("debug", `[message] ${event.data}`)
 
         var content = JSON.parse(event.data)
         var server = content.server

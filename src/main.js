@@ -33,12 +33,6 @@ class ModuleInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
-		this.outputs = []
-		this.inputs = []
-		this.clips = []
-		this.playlists = []
-		this.ws = undefined
-
 		await this.configUpdated(config)
 	}
 
@@ -55,6 +49,11 @@ class ModuleInstance extends InstanceBase {
 
 	async init_nexa()
 	{
+		this.outputs = []
+		this.inputs = []
+		this.clips = []
+		this.playlists = []
+
 		if (this.config.serviceUrl && this.config.serverId)
 		{
 			this.updateStatus(InstanceStatus.Connecting)
@@ -157,7 +156,7 @@ class ModuleInstance extends InstanceBase {
 				}
 
 				this.setActionDefinitions(this.initActions(this))
-				this.initFeedbacks()
+				this.setFeedbackDefinitions(this.initFeedbacks(this))
 				this.initVariables()
 				this.initPresets()
 
