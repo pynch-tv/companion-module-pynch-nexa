@@ -33,6 +33,8 @@ class ModuleInstance extends InstanceBase {
 	async init(config) {
 		this.config = config
 
+		this.initVariables()
+
 		await this.configUpdated(config)
 	}
 
@@ -60,8 +62,6 @@ class ModuleInstance extends InstanceBase {
 
 			let serviceUrl = this.config.serviceUrl
 			let serverId = this.config.serverId
-
-			let self = this
 
 			try {
 				this.log('debug', `landingPage uri: ${serviceUrl}`);
@@ -157,7 +157,6 @@ class ModuleInstance extends InstanceBase {
 
 				this.setActionDefinitions(this.initActions(this))
 				this.setFeedbackDefinitions(this.initFeedbacks(this))
-				this.initVariables()
 				this.initPresets()
 
 				this.updateStatus(InstanceStatus.Ok)
