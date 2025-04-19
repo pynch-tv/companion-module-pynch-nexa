@@ -21,16 +21,6 @@ module.exports = {
 
 		if (self.outputs)
 		{
-			var clipChoices = []
-			self.clips.forEach(clip => {
-				clipChoices.push({ id: clip.id, label: clip.id})
-			});
-
-			var outputChoices = []
-			self.outputs.forEach(output => {
-				outputChoices.push({ id: output.id, label: output.id})
-			});
-
 			actions['load'] = {
 				name: 'Load Clip',
 				description: 'Loads a clip on an Output',
@@ -39,15 +29,15 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Output',
 						id: 'outputId',
-						choices: outputChoices,
-						default: outputChoices[0].id,
+						choices: choices.outputChoices,
+						default: choices.outputChoices[0].id,
 					},
 					{
 						type: 'dropdown',
 						label: 'Clip',
 						id: 'clipId',
-						choices: clipChoices,
-						default: clipChoices[0].id,
+						choices: choices.clipChoices,
+						default: choices.clipChoices[0].id,
 					},
 				],
 				callback: async (event) => {
@@ -79,7 +69,7 @@ module.exports = {
 					self.log("info", `Action Load done` )
 				},
 			}
-
+ 
 			actions['play'] = {
 				name: 'Play',
 				description: 'Play the currently loaded clip',
@@ -88,8 +78,8 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Output',
 						id: 'outputId',
-						choices: outputChoices,
-						default: outputChoices[0].id,
+						choices: choices.outputChoices,
+						default: choices.outputChoices[0].id,
 					},
 					{
 						type: 'number',
@@ -139,8 +129,8 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Output',
 						id: 'outputId',
-						choices: outputChoices,
-						default: outputChoices[0].id,
+						choices: choices.outputChoices,
+						default: choices.outputChoices[0].id,
 					},
 				],
 				callback: async (event) => {
@@ -171,8 +161,8 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Output',
 						id: 'outputId',
-						choices: outputChoices,
-						default: outputChoices[0].id,
+						choices: choices.outputChoices,
+						default: choices.outputChoices[0].id,
 					},
 					{
 						type: 'number',
@@ -211,8 +201,8 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Output',
 						id: 'outputId',
-						choices: outputChoices,
-						default: outputChoices[0].id,
+						choices: choices.outputChoices,
+						default: choices.outputChoices[0].id,
 					},
 					{
 						type: 'number',
@@ -249,8 +239,8 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Output',
 						id: 'outputId',
-						choices: outputChoices,
-						default: outputChoices[0].id,
+						choices: choices.outputChoices,
+						default: choices.outputChoices[0].id,
 					},
 					{
 						type: 'number',
@@ -297,8 +287,8 @@ module.exports = {
 						type: 'dropdown',
 						label: 'Input',
 						id: 'inputId',
-						choices: inputChoices,
-						default: inputChoices[0].id,
+						choices: choices.inputChoices,
+						default: choices.inputChoices[0].id,
 					},
 				],
 				callback: async (event) => {

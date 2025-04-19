@@ -26,8 +26,8 @@ module.exports = {
 					type: 'dropdown',
 					label: 'Output',
 					id: 'outputId',
-					choices: outputChoices,
-					default: outputChoices[0].id,
+					choices: choices.outputChoices,
+					default: choices.outputChoices[0].id,
 				},
 				{
 					type: 'dropdown',
@@ -38,9 +38,9 @@ module.exports = {
 				},
 			],
 			callback: ({options}) => {
-				const output = self.outputs.find(output => output.id === options.outputId)
+				const output = choices.outputChoices.find(output => output.id === options.outputId)
 		//		self.log("debug", `---=====---- ${options.status} ${output.status}` )
-				return options.status === output.status
+				return false;//options.status === output.status
 			},
 		}
 

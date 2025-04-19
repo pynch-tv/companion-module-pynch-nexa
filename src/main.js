@@ -6,12 +6,12 @@ const actions = require('./actions')
 const feedbacks = require('./feedbacks')
 const variables = require('./variables')
 const presets = require('./presets')
+const choices = require('./choices')
 
 const utils = require('./utils');
 const events = require('./serverEvents')
 
 const axios = require('axios')
-const ws = require('ws')
 
 class ModuleInstance extends InstanceBase {
 
@@ -115,44 +115,56 @@ class ModuleInstance extends InstanceBase {
 				if (outputsUri)
 				{
 					response = await axios.get(`${outputsUri}?f=json&properties=id,name`)
-						this.outputs = response.data.outputs
-		
-						// Add status field per output
-						for (const output of this.outputs)
-							output.status = ''
+					this.outputs = response.data.outputs
+	
+					// Add status field per output
+					for (const output of this.outputs)
+						output.status = ''
 
-						for (const link of this.outputs)
-							this.log("info", `${serverId} Outputs ${link.id}`)
+					for (const output of this.outputs)
+						choices.outputChoices.push({ id: output.id, label: output.id})
+					
+					for (const output of this.outputs)
+						this.log("info", `${serverId} Outputs ${output.id}`)
 				}
 
-				if (inputsUri)
+				if (inputsUri) 
 				{
 					response = await axios.get(`${inputsUri}?f=json&properties=id,name`)
-						this.inputs = response.data.inputs
-		
-						for (const input of this.inputs)
-							input.status = ''
+					this.inputs = response.data.inputs
 	
-						for (const link of this.inputs)
-							this.log("info", `${serverId} Inputs ${link.id}`)
+					for (const input of this.inputs)
+						input.status = ''
+
+					for (const input of this.inputs)
+						choices.inputChoices.push({ id: input.id, label: input.id})
+
+					for (const input of this.inputs)
+						this.log("info", `${serverId} Inputs ${input.id}`)
 				}
 
 				if (clipsUri)
 				{
 					response = await axios.get(`${clipsUri}?f=json&properties=id,name`)
-						this.clips = response.data.clips
-		
-						for (const link of this.clips)
-							this.log("info", `${serverId} Clips ${link.id}`)
+					this.clips = response.data.clips
+
+					for (const clip of this.clips)
+						choices.clipChoices.push({ id: clip.id, label: clip.id})
+
+					for (const clip of this.clips)
+						this.log("info", `${serverId} Clips ${clip.id}`)
 				}
 
 				if (playlistsUri)
 				{
 					response = await axios.get(`${playlistsUri}?f=json&properties=id,name`)
-						this.playlists = response.data.playlists
-		
-						for (const link of this.playlists)
-							this.log("info", `${serverId} Playlists ${link.id}`)
+					this.playlists = response.data.playlists
+
+					for (const playlist of this.playlists)
+						choices.playlistChoices.push({ id: playlist.id, label: playlist.id})
+
+					for (const playlist of this.playlists)
+						this.log("info", `${serverId} Playlists ${playlist.id}`)
 				}
 
 				this.setActionDefinitions(this.initActions(this))
