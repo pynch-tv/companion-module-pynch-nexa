@@ -68,7 +68,10 @@ async function initEvents (subscribeUri)
                     {
                         this.setActionDefinitions(this.initActions(this))
                         this.setFeedbackDefinitions(this.initFeedbacks(this))
-                        this.initPresets()        
+                        this.initPresets()
+                        this.setVariableValues({
+                            'clipCount': response.data.clipCount,
+                        })
                     }
 
                     break
