@@ -122,7 +122,7 @@ class ModuleInstance extends InstanceBase {
 						output.status = ''
 
 					for (const output of this.outputs)
-						choices.outputChoices.push({ id: output.id, label: output.id})
+						choices.outputChoices.push({ id: output.id, label: output.id })
 					
 					for (const output of this.outputs)
 						this.log("info", `${serverId} Outputs ${output.id}`)

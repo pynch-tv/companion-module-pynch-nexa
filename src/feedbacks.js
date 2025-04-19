@@ -38,9 +38,9 @@ module.exports = {
 				},
 			],
 			callback: ({options}) => {
-				const output = choices.outputChoices.find(output => output.id === options.outputId)
-		//		self.log("debug", `---=====---- ${options.status} ${output.status}` )
-				return false;//options.status === output.status
+				const output = this.outputs.find(item => item.id === options.outputId)
+//				self.log("debug", `---=====---- ${options.status} ${options.outputId} ${choices.outputChoices[0].id} ${output.id} ${output.status}` )
+				return options.status === output.status
 			},
 		}
 
