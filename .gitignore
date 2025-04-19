@@ -4,5 +4,3 @@ package-lock.json
 /pkg.tgz
 DEBUG-*
 /.yarn
-yarn.lock
-.DS_Store
