@@ -1,5 +1,7 @@
 const axios = require('axios')
-  
+const asyncLock = require('./asyncLock')
+const choices = require('./choices')
+
 module.exports = {
 	  
 	initActions: function () {
@@ -7,18 +9,7 @@ module.exports = {
 	
 		const maxShuttle = 5000
 
-		class AsyncLock {
-			constructor () {
-				this.disable = () => {}
-				this.promise = Promise.resolve()
-			}
-			
-			enable () {
-				this.promise = new Promise(resolve => this.disable = resolve)
-			}
-		}
-	
-		const lock = new AsyncLock()
+		const lock = new asyncLock()
 
 		const actions = [];
 	/*
@@ -28,16 +19,6 @@ module.exports = {
 			}
 		}
 	*/
-
-		var outputStatusChoices = []
-		outputStatusChoices.push({ id: "play", label: "Play"})
-		outputStatusChoices.push({ id: "stop", label: "Stop"})
-		outputStatusChoices.push({ id: "pause", label: "Pause"})
-
-		var inputStatusChoices = []
-		inputStatusChoices.push({ id: "record", label: "Record"})
-		inputStatusChoices.push({ id: "stop", label: "Stop"})
-
 
 		if (self.outputs)
 		{
@@ -52,19 +33,22 @@ module.exports = {
 			});
 
 			actions['load'] = {
-				name: 'Load',
+				name: 'Load Clip',
+				description: 'Loads a clip on an Output',
 				options: [
 					{
 						type: 'dropdown',
 						label: 'Output',
 						id: 'outputId',
 						choices: outputChoices,
+						default: outputChoices[0].id,
 					},
 					{
 						type: 'dropdown',
 						label: 'Clip',
 						id: 'clipId',
 						choices: clipChoices,
+						default: clipChoices[0].id,
 					},
 				],
 				callback: async (event) => {
@@ -86,8 +70,6 @@ module.exports = {
 						var response = await axios.patch(`${serviceUrl}/servers/${serverId}/outputs/${outputId}`, body)
 						self.log("info", `Load response ${response.status}` )
 
-					//	await new Promise(r => setTimeout(r, 2000));
-
 						lock.disable()
 					}
 					catch (err)
@@ -101,12 +83,14 @@ module.exports = {
 
 			actions['play'] = {
 				name: 'Play',
+				description: 'Play the currently loaded clip',
 				options: [
 					{
 						type: 'dropdown',
 						label: 'Output',
 						id: 'outputId',
 						choices: outputChoices,
+						default: outputChoices[0].id,
 					},
 					{
 						type: 'number',
@@ -150,12 +134,14 @@ module.exports = {
 		
 			actions['stop'] = {
 				name: 'Stop',
+				description: 'Stop the running clip',
 				options: [
 					{
 						type: 'dropdown',
 						label: 'Output',
 						id: 'outputId',
 						choices: outputChoices,
+						default: outputChoices[0].id,
 					},
 				],
 				callback: async (event) => {
@@ -187,6 +173,7 @@ module.exports = {
 						label: 'Output',
 						id: 'outputId',
 						choices: outputChoices,
+						default: outputChoices[0].id,
 					},
 					{
 						type: 'number',
@@ -226,6 +213,7 @@ module.exports = {
 						label: 'Output',
 						id: 'outputId',
 						choices: outputChoices,
+						default: outputChoices[0].id,
 					},
 					{
 						type: 'number',
@@ -263,6 +251,7 @@ module.exports = {
 						label: 'Output',
 						id: 'outputId',
 						choices: outputChoices,
+						default: outputChoices[0].id,
 					},
 					{
 						type: 'number',
@@ -310,6 +299,7 @@ module.exports = {
 						label: 'Input',
 						id: 'inputId',
 						choices: inputChoices,
+						default: inputChoices[0].id,
 					},
 				],
 				callback: async (event) => {

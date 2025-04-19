@@ -1,13 +1,14 @@
 const { InstanceBase, Regex, runEntrypoint, InstanceStatus } = require('@companion-module/base')
-const UpgradeScripts = require('./src/upgrades')
+const UpgradeScripts = require('./upgrades')
 
-const config = require('./src/config');
-const actions = require('./src/actions')
-const feedbacks = require('./src/feedbacks')
-const variables = require('./src/variables')
-const presets = require('./src/presets')
+const config = require('./config');
+const actions = require('./actions')
+const feedbacks = require('./feedbacks')
+const variables = require('./variables')
+const presets = require('./presets')
 
-const utils = require('./src/utils');
+const utils = require('./utils');
+const events = require('./serverEvents')
 
 const axios = require('axios')
 const ws = require('ws')
@@ -25,6 +26,7 @@ class ModuleInstance extends InstanceBase {
 			...presets,
 			...feedbacks,
 			...utils,
+			...events,
 		})
 	}
 
@@ -76,88 +78,7 @@ class ModuleInstance extends InstanceBase {
 					var subscribeUri = this.getUriFromEvents(response.data.events, "ws")
 					this.log("debug", `uri to subscribe ${subscribeUri}`)
 
-					this.ws = new ws(subscribeUri);
-					this.log("debug", `webSocket ${this.ws}`)
-
-					this.ws.onopen = function(e) {
-					}
-					  
-					this.ws.onmessage = function(event) {
-						var data = JSON.parse(event.data)
-						var server = data.server
-
-						if (Object.keys(data).length === 0)
-							return // alive message
-
-		//				self.log("debug", `[message] Data received from server: ${event.data}`)
-					
-						// We only care for event for this serverId
-						if (server == self.config.serverId)
-						{
-							if (data.topic === undefined || data.action == undefined) 
-							{
-								self.log("error", `received message not valid. It does not contain a topic or action` )
-								return
-							}
-
-							switch (data.topic.name)
-							{
-								case "output":
-									{
-										var id = data.topic.id
-
-										self.checkVariables()
-									//	self.checkFeedbacks()
-								
-										switch (data.action)
-										{
-											case "change":
-												if (data.data.state)
-												{
-													switch (data.topic.name)
-													{
-														case "play":
-														case "start":
-															break;
-														case "stop":
-														case "stopped":
-															break;
-													}
-												}
-												break
-										}
-									}
-									break;
-								case "input":
-									{
-										var id = data.topic.id
-										self.log("debug", `input message ${id}` )
-						
-										switch (data.action)
-										{
-											case "change":
-												break
-										}
-									}
-									break;
-							}
-						}
-
-					}
-					
-					this.ws.onclose = function(event) {
-						if (event.wasClean) {
-							self.log("debug", `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`)
-						} else {
-							// e.g. server process killed or network down
-							// event.code is usually 1006 in this case
-							self.log("debug", '[close] Connection died')
-						}
-					}
-					
-					this.ws.onerror = function(error) {
-						self.log("debug", `error = ${error.data}`)
-					}
+					this.initEvents(subscribeUri)
 				} 
 	
 				var response = await axios.get(`${serviceUrl}/servers/${serverId}`)
@@ -192,52 +113,47 @@ class ModuleInstance extends InstanceBase {
 					this.log("debug", `uri to outputs ${inputsUri}`)
 				}
 	
-				this.outputs = []
 				if (outputsUri)
 				{
 					response = await axios.get(`${outputsUri}?f=json&properties=id,name`)
-					{
 						this.outputs = response.data.outputs
 		
+						// Add status field per output
+						for (const output of this.outputs)
+							output.status = ''
+
 						for (const link of this.outputs)
 							this.log("info", `${serverId} Outputs ${link.id}`)
-					}
 				}
 
-				this.inputs = []
 				if (inputsUri)
 				{
 					response = await axios.get(`${inputsUri}?f=json&properties=id,name`)
-					{
 						this.inputs = response.data.inputs
 		
+						for (const input of this.inputs)
+							input.status = ''
+	
 						for (const link of this.inputs)
 							this.log("info", `${serverId} Inputs ${link.id}`)
-					}
 				}
 
-				this.clips = []
 				if (clipsUri)
 				{
 					response = await axios.get(`${clipsUri}?f=json&properties=id,name`)
-					{
 						this.clips = response.data.clips
 		
 						for (const link of this.clips)
 							this.log("info", `${serverId} Clips ${link.id}`)
-					}
 				}
 
-				this.playlists = []
 				if (playlistsUri)
 				{
 					response = await axios.get(`${playlistsUri}?f=json&properties=id,name`)
-					{
 						this.playlists = response.data.playlists
 		
 						for (const link of this.playlists)
 							this.log("info", `${serverId} Playlists ${link.id}`)
-					}
 				}
 
 				this.initActions()

@@ -1,5 +1,3 @@
-const http = require('http');
-
 module.exports = {
     
     getUriFromEvents(events, rel)
