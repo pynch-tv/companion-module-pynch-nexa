@@ -9,10 +9,17 @@ Allows you to connect and control AudioVideo servers from various vendors.
 - Play
 - Stop
 - Pause
+- Record
 
 **Supported feedback**
 
 - Play
+- Record
+
+**Supported presets**
+
+- Input
+- Output
 
 **Supported button variables**
 
