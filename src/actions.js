@@ -19,8 +19,10 @@ module.exports = {
 		}
 	*/
 
-		if (self.outputs)
+		if (self.outputs.length > 0)
 		{
+			self.log("debug", `Making output Actions` )
+
 			actions['load'] = {
 				name: 'Load Clip',
 				description: 'Loads a clip on an Output',
@@ -269,12 +271,14 @@ module.exports = {
 					}
 				},
 			}
-
-		
 		}
+		else
+		self.log("info", `No output Actions` )
 
-		if (self.inputs)
+		if (self.inputs.length > 0)
 		{
+			self.log("debug", `Making input Actions` )
+
 			var inputChoices = []
 			self.inputs.forEach(input => {
 				inputChoices.push({ id: input.id, label: input.id})
@@ -310,6 +314,8 @@ module.exports = {
 				},
 			}
 		}
+		else
+			self.log("info", `No input Actions` )
 
 		return actions
 	}

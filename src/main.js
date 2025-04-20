@@ -66,12 +66,16 @@ class ModuleInstance extends InstanceBase {
 			try {
 				this.log('debug', `landingPage uri: ${serviceUrl}`);
 
+				var request = `${serviceUrl}`
+				this.log("debug", `Request ${request}`)
 				var response = await axios.get(`${serviceUrl}`)
 				{
 					var eventsUri = this.getUriFromLinkHeader(response, "events")
 					this.log("debug", `uri to events ${eventsUri}`)
 				};
 
+				request = eventsUri
+				this.log("debug", `Request ${request}`)
 				var response = await axios.get(eventsUri)
 				{
 					var subscribeUri = this.getUriFromEvents(response.data.events, "ws")
@@ -80,7 +84,9 @@ class ModuleInstance extends InstanceBase {
 					this.initEvents(subscribeUri)
 				} 
 	
-				var response = await axios.get(`${serviceUrl}/servers/${serverId}`)
+				request = `${serviceUrl}/servers/${serverId}`
+				this.log("debug", `Request ${request}`)
+				var response = await axios.get(request)
 				{
 					this.setVariableValues({
 						'id': response.data.id,
@@ -109,12 +115,14 @@ class ModuleInstance extends InstanceBase {
 					this.log("debug", `uri to clips ${clipsUri}`)
 					this.log("debug", `uri to playlists ${playlistsUri}`)
 					this.log("debug", `uri to outputs ${outputsUri}`)
-					this.log("debug", `uri to outputs ${inputsUri}`)
+					this.log("debug", `uri to inputs ${inputsUri}`)
 				}
 	
 				if (outputsUri)
 				{
-					response = await axios.get(`${outputsUri}?f=json&properties=id,name`)
+					request = `${outputsUri}?f=json&properties=id,name`
+					this.log("debug", `Request ${request}`)
+					response = await axios.get(request)
 					this.outputs = response.data.outputs
 	
 					// Add status field per output
@@ -126,11 +134,16 @@ class ModuleInstance extends InstanceBase {
 					
 					for (const output of this.outputs)
 						this.log("info", `${serverId} Outputs ${output.id}`)
+
+					if (this.outputs.length == 0)
+						this.log("info", `${serverId} No Outputs`)
 				}
 
 				if (inputsUri) 
 				{
-					response = await axios.get(`${inputsUri}?f=json&properties=id,name`)
+					request = `${inputsUri}?f=json&properties=id,name`
+					this.log("debug", `Request ${request}`)
+					response = await axios.get(request)
 					this.inputs = response.data.inputs
 	
 					for (const input of this.inputs)
@@ -141,11 +154,16 @@ class ModuleInstance extends InstanceBase {
 
 					for (const input of this.inputs)
 						this.log("info", `${serverId} Inputs ${input.id}`)
+
+	//				if (this.inputs.length == 0 || this.inputs == undefined)
+						this.log("info", `${serverId} No Inputs`)
 				}
 
 				if (clipsUri)
 				{
-					response = await axios.get(`${clipsUri}?f=json&properties=id,name`)
+					request = `${clipsUri}?f=json&properties=id,name`
+					this.log("debug", `Request ${request}`)
+					response = await axios.get(request)
 					this.clips = response.data.clips
 
 					for (const clip of this.clips)
@@ -153,18 +171,28 @@ class ModuleInstance extends InstanceBase {
 
 					for (const clip of this.clips)
 						this.log("info", `${serverId} Clips ${clip.id}`)
+
+					if (this.clips.length == 0)
+						this.log("info", `${serverId} No Clips`)
 				}
 
 				if (playlistsUri)
 				{
-					response = await axios.get(`${playlistsUri}?f=json&properties=id,name`)
+					request = `${playlistsUri}?f=json&properties=id,name`
+					this.log("debug", `Request ${request}`)
+					response = await axios.get(request)
 					this.playlists = response.data.playlists
+
+					this.log("warning", `${this.playlists.length}`)
 
 					for (const playlist of this.playlists)
 						choices.playlistChoices.push({ id: playlist.id, label: playlist.id})
 
 					for (const playlist of this.playlists)
 						this.log("info", `${serverId} Playlists ${playlist.id}`)
+
+					if (this.playlists.length == 0)
+						this.log("info", `${serverId} No Playlists`)
 				}
 
 				this.setActionDefinitions(this.initActions(this))
@@ -179,7 +207,6 @@ class ModuleInstance extends InstanceBase {
 	
 				this.updateStatus(InstanceStatus.ConnectionFailure)
 			}
-	
 		}
 		else
 			this.updateStatus(InstanceStatus.BadConfig)

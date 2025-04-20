@@ -12,37 +12,44 @@ module.exports = {
 
 		const feedbacks = [];
 
-		feedbacks['outputState'] =
+		if (self.outputs.length > 0)
 		{
-			name: 'Output status',
-			type: 'boolean',
-			description: 'Set feedback based on output status',
-			defaultStyle: {
-				bgcolor: combineRgb(255, 0, 0),
-				color: combineRgb(0, 0, 0),
-			},
-			options: [
-				{
-					type: 'dropdown',
-					label: 'Output',
-					id: 'outputId',
-					choices: choices.outputChoices,
-					default: choices.outputChoices[0].id,
+			self.log("debug", `Making output Feedbacks` )
+
+			feedbacks['outputState'] =
+			{
+				name: 'Output status',
+				type: 'boolean',
+				description: 'Set feedback based on output status',
+				defaultStyle: {
+					bgcolor: combineRgb(255, 0, 0),
+					color: combineRgb(0, 0, 0),
 				},
-				{
-					type: 'dropdown',
-					label: 'Status',
-					id: 'status',
-					choices: choices.outputStatusChoices,
-					default: choices.outputStatusChoices[0].id,
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Output',
+						id: 'outputId',
+						choices: choices.outputChoices,
+						default: choices.outputChoices[0].id,
+					},
+					{
+						type: 'dropdown',
+						label: 'Status',
+						id: 'status',
+						choices: choices.outputStatusChoices,
+						default: choices.outputStatusChoices[0].id,
+					},
+				],
+				callback: ({options}) => {
+					const output = this.outputs.find(item => item.id === options.outputId)
+	//				self.log("debug", `---=====---- ${options.status} ${options.outputId} ${choices.outputChoices[0].id} ${output.id} ${output.status}` )
+					return options.status === output.status
 				},
-			],
-			callback: ({options}) => {
-				const output = this.outputs.find(item => item.id === options.outputId)
-//				self.log("debug", `---=====---- ${options.status} ${options.outputId} ${choices.outputChoices[0].id} ${output.id} ${output.status}` )
-				return options.status === output.status
-			},
+			}
 		}
+		else
+			self.log("info", `Feedbacks, No outputs` )
 
 		return feedbacks
 	}
