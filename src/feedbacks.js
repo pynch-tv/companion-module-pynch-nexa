@@ -51,6 +51,45 @@ module.exports = {
 		else
 			self.log("info", `Feedbacks, No outputs` )
 
+		if (self.inputs.length > 0)
+		{
+			self.log("debug", `Making input Feedbacks` )
+
+			feedbacks['inputState'] =
+			{
+				name: 'Input status',
+				type: 'boolean',
+				description: 'Set feedback based on input status',
+				defaultStyle: {
+					bgcolor: combineRgb(255, 0, 0),
+					color: combineRgb(0, 0, 0),
+				},
+				options: [
+					{
+						type: 'dropdown',
+						label: 'Input',
+						id: 'inputId',
+						choices: choices.inputChoices,
+						default: choices.inputChoices[0].id,
+					},
+					{
+						type: 'dropdown',
+						label: 'Status',
+						id: 'status',
+						choices: choices.inputStatusChoices,
+						default: choices.inputStatusChoices[0].id,
+					},
+				],
+				callback: ({options}) => {
+					const input = this.inputs.find(item => item.id === options.inputId)
+					self.log("debug", `---=====---- ${options.status} ${options.inputId} ${choices.inputChoices[0].id} ${input.id} ${input.status}` )
+					return options.status === input.status
+				},
+			}
+		}
+		else
+			self.log("info", `Feedbacks, No inputs` )
+		
 		return feedbacks
 	}
 }

@@ -1,5 +1,6 @@
 const { InstanceStatus } = require('@companion-module/base')
 const axios = require('axios')
+const choices = require('./choices')
 
 module.exports = {
 
@@ -110,7 +111,7 @@ module.exports = {
 					for (const input of self.inputs)
 						self.log("info", `${serverId} Inputs ${input.id}`)
 
-	//				if (self.inputs.length == 0 || self.inputs == undefined)
+					if (self.inputs.length == 0)
 						self.log("info", `${serverId} No Inputs`)
 				}
 

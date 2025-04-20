@@ -282,7 +282,7 @@ module.exports = {
 				inputChoices.push({ id: input.id, label: input.id})
 			});
 
-			actions['input'] = {
+			actions['record'] = {
 				name: 'Record',
 				options: [
 					{
