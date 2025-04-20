@@ -12,11 +12,9 @@ module.exports = {
 
 		const actions = [];
 	/*
-		for (var key in self.config) {
-			if (self.config.hasOwnProperty(key)) {
+		for (var key in self.config) 
+			if (self.config.hasOwnProperty(key)) 
 				self.log("debug", `action Key: ${key} Value: ${self.config[key]}` )
-			}
-		}
 	*/
 
 		if (self.outputs.length > 0)
