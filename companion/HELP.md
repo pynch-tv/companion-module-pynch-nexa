@@ -1,7 +1,7 @@
 ## Pynch Nexa
 
 Allows you to connect and control AudioVideo servers from various vendors.
-[Nexa](https://github.com/pynch-tv/Nexa) is an abstraction to the EVS XT, Blackmagic Design HyperDeck and Sony9Pin. Download the latest version [here](https://bzzrs.aardvark.myds.me/bzzrbx/v1.0/collections/pynch/items/1.8.9261?t=nexa).
+[Nexa](https://github.com/pynch-tv/Nexa) is an abstraction to the EVS XT, Blackmagic Design HyperDeck. Download the latest version [here](https://bzzrs.aardvark.myds.me/bzzrbx/v1.0/collections/pynch/items/1.8.9261?t=nexa).
 
 **Supported commands**
 
@@ -12,7 +12,7 @@ Allows you to connect and control AudioVideo servers from various vendors.
 
 **Supported feedback**
 
-- n/a
+- Play
 
 **Supported button variables**
 
