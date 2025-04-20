@@ -64,14 +64,16 @@ class ModuleInstance extends InstanceBase {
 			let serverId = this.config.serverId
 
 			try {
-				this.log('debug', `landingPage uri: ${serviceUrl}`);
+				this.log('info', `connecting to nexa landingPage on uri: ${serviceUrl}`);
 
-				var request = `${serviceUrl}`
+				var request = serviceUrl
 				this.log("debug", `Request ${request}`)
 				var response = await axios.get(`${serviceUrl}`)
 				{
 					var eventsUri = this.getUriFromLinkHeader(response, "events")
 					this.log("debug", `uri to events ${eventsUri}`)
+					var dataUri = this.getUriFromLinkHeader(response, "data")
+					this.log("debug", `uri to servers ${dataUri}`)
 				};
 
 				request = eventsUri
@@ -84,7 +86,7 @@ class ModuleInstance extends InstanceBase {
 					this.initEvents(subscribeUri)
 				} 
 	
-				request = `${serviceUrl}/servers/${serverId}`
+				request = `${dataUri}/${serverId}`
 				this.log("debug", `Request ${request}`)
 				var response = await axios.get(request)
 				{
@@ -201,11 +203,27 @@ class ModuleInstance extends InstanceBase {
 
 				this.updateStatus(InstanceStatus.Ok)
 			}
-			catch (err)
+			catch (error)
 			{
-				this.log("error", `${err}`)
+				//this.log("error", `${err}`)
 	
-				this.updateStatus(InstanceStatus.ConnectionFailure)
+				if (error.response) {
+					// The request was made and the server responded with a status code
+					// that falls out of the range of 2xx			
+					this.log("error", ` Error: ${error.response.status} Detail: ${error.response.data.detail}`) // detail, status, title
+					this.updateStatus(InstanceStatus.BadConfig)
+				} else if (error.request) {
+					// The request was made but no response was received
+					// `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+					// http.ClientRequest in node.js
+					this.log("error", error.request)
+					this.updateStatus(InstanceStatus.ConnectionFailure)
+				} else {
+					// Something happened in setting up the request that triggered an Error
+					this.log("error", `Error ${error.message}`)
+					this.updateStatus(InstanceStatus.ConnectionFailure)
+				}
+			  
 			}
 		}
 		else
