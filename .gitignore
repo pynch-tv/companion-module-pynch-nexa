@@ -3,3 +3,4 @@ node_modules/
 /pkg.tgz
 /dist
 DEBUG-*
+.DS_Store
