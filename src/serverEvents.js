@@ -5,6 +5,7 @@ async function initEvents (subscribeUri)
 {
     let self = this
 
+    self.log("debug", 'opening WebSocket to ${subscribeUri}')
     const ws = new websocket(subscribeUri);
 
     ws.onopen = function(e) {
@@ -13,7 +14,7 @@ async function initEvents (subscribeUri)
         
     ws.onmessage = function(event) 
     {
-//        self.log("debug", `[message] ${event.data}`)
+   //     self.log("debug", `[message] ${event.data}`)
 
         var content = JSON.parse(event.data)
         var server = content.server
@@ -80,9 +81,11 @@ async function initEvents (subscribeUri)
                     switch (action)
                     {
                         case 'change':
-                            switch (data.state)
+                            if (data.state == undefined) return
+                            switch (data.state.toLowerCase())
                             {
                                 case "play":
+                                case "playing":
                                 case "start":
                                     {
                                         self.log("debug", `${topic.id} play` )
@@ -93,6 +96,8 @@ async function initEvents (subscribeUri)
                                     break
                                 case "stop":
                                 case "stopped":
+                                case "ready":
+                                case "live":
                                     {
                                         self.log("debug", `${topic.id} stop` )
                                         const output = self.outputs.find(output => output.id === topic.id)

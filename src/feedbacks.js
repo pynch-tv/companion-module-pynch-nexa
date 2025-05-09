@@ -43,7 +43,7 @@ module.exports = {
 				],
 				callback: ({options}) => {
 					const output = this.outputs.find(item => item.id === options.outputId)
-					self.log("debug", `---=====---- ${options.status} ${options.outputId} ${choices.outputChoices[0].id} ${output.id} ${output.status}` )
+//					self.log("debug", `---=====---- ${options.status} ${options.outputId} ${choices.outputChoices[0].id} ${output.id} ${output.status}` )
 					return options.status === output.status
 				},
 			}
@@ -82,7 +82,7 @@ module.exports = {
 				],
 				callback: ({options}) => {
 					const input = this.inputs.find(item => item.id === options.inputId)
-					self.log("debug", `---=====---- ${options.status} ${options.inputId} ${choices.inputChoices[0].id} ${input.id} ${input.status}` )
+//					self.log("debug", `---=====---- ${options.status} ${options.inputId} ${choices.inputChoices[0].id} ${input.id} ${input.status}` )
 					return options.status === input.status
 				},
 			}

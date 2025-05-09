@@ -73,7 +73,7 @@ module.exports = {
 						var subscribeUri = self.getUriFromEvents(response.data.events, "ws")
 						self.log("debug", `uri to subscribe ${subscribeUri}`)
 
-						self.initEvents(subscribeUri)
+						await self.initEvents(subscribeUri)
 					} 
 				}
 
